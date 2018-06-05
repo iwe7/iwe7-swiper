@@ -3,14 +3,14 @@
     <ng-container *ngTemplateOutlet="_slide;context:{$implicit: item, index: index};"></ng-container>
   </ng-container>
 </div>
-<div class="dots" *ngIf="hasDot">
+<div class="dots" *ngIf="_hasDot">
   <ng-container *ngFor="let item of list;index as i;">
     <ng-container *ngTemplateOutlet="_dot;context:{$implicit: currentPageIndex, index: i};"></ng-container>
   </ng-container>
 </div>
 
 <ng-template #slideItem let-item>
-  <a>
+  <a class="slide-item">
     <img [src]="item.image">
   </a>
 </ng-template>

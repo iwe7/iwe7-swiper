@@ -26,6 +26,28 @@
 | list      | []    | array   |
 
 
+```html
+<swiper-outlet [list]="list"></swiper-outlet>
+
+<button mat-flat-button (click)="showDialogX()">showDialogX</button>
+<button mat-flat-button (click)="showDialogY()">showDialogY</button>
+
+<ng-template #tplX>
+  <swiper-outlet [list]="list"></swiper-outlet>
+</ng-template>
+
+<ng-template #tplY>
+  <swiper-outlet scrollY [list]="list"></swiper-outlet>
+</ng-template>
+```
+
+```ts
+list: any[] = [{
+    image: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000004ckGfg3zaho0.jpg'
+}, {
+    image: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000004ckGfg3zaho0.jpg'
+}];
+```
 
 | 组件名                | 说明        | 地址                                         |
 |--------------------|-----------|--------------------------------------------|
@@ -42,3 +64,4 @@
 | iwe7-url           | api链接便签   | https://github.com/iwe7/iwe7-url           |
 | iwe7-video         | 视频播放      | https://github.com/iwe7/iwe7-video         |
 | iwe7-swiper        | 轮播组件      | https://github.com/iwe7/iwe7-swiper        |
+

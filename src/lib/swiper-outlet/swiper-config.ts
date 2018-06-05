@@ -14,7 +14,7 @@ export class SwiperConfig {
     slide: any;
     timer: any;
     currentPageIndex: number = 0;
-    interval: number = 2000;
+    interval: number = 8000;
     threshold: number = 0.3;
     speed: number = 400;
     list: any[] = [];
@@ -36,6 +36,7 @@ export class SwiperBase extends Iwe7CoreComponent {
     list: any[] = [];
     cfg: any;
     _hasDot: boolean = true;
+    height: string = '120px';
     constructor(injector: Injector) {
         super(injector);
         this.cfg = this.injector.get(SwiperConfig);
@@ -47,17 +48,5 @@ export class SwiperBase extends Iwe7CoreComponent {
             this.slide.next();
         }, this.interval);
     }
-    _onScrollEnd() {
-        if (this._scrollX) {
-            const pageIndex = this.slide.getCurrentPage().pageX;
-            this.currentPageIndex = pageIndex;
-        } else {
-            const pageIndex = this.slide.getCurrentPage().pageY;
-            this.currentPageIndex = pageIndex;
-        }
-        if (this._autoPlay) {
-            this._play();
-        }
-        this._cd.markForCheck();
-    }
+    
 }

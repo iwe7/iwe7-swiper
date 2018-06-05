@@ -21,12 +21,14 @@ import * as _ from 'lodash';
     encapsulation: ViewEncapsulation.None,
     host: {
         '[class.scroll-x]': '_scrollX',
-        '[class.scroll-y]': '_scrollY'
+        '[class.scroll-y]': '_scrollY',
+        '[style.height]': 'height'
     },
     inputs: ['interval', 'threshold', 'speed', 'list']
 })
 export class SwiperOutletComponent extends SwiperBase {
-    @Input() 
+    @Input() height: string = '120px';
+    @Input()
     set hasDot(val: any) {
         this._hasDot = coerceBooleanProperty(val);
     }
@@ -68,7 +70,6 @@ export class SwiperOutletComponent extends SwiperBase {
             this._slide = val;
         }
     }
-
     _dot: TemplateRef<any>;
     // 替换模板
     @ContentChild(SwiperDotDirective)
@@ -100,6 +101,17 @@ export class SwiperOutletComponent extends SwiperBase {
                         this.initBetterScroll();
                     }
                 }
+            });
+
+            this.getCyc('ngAfterContentInit').subscribe(res => {
+                let index = 0;
+                if (this._loop) {
+                    index = this.currentPageIndex + 1;
+                } else {
+                    index = this.currentPageIndex;
+                }
+                const ele = this.children[index];
+                this.updateStyle();
             });
         });
     }
@@ -168,5 +180,20 @@ export class SwiperOutletComponent extends SwiperBase {
         }
         this.render.setStyle(this.group.nativeElement, val, slideWidth * this.children.length + 'px');
         this.render.setStyle(this.group.nativeElement, 'opacity', '1');
+    }
+
+    _onScrollEnd() {
+        if (this._scrollX) {
+            const pageIndex = this.slide.getCurrentPage().pageX;
+            this.currentPageIndex = pageIndex;
+        } else {
+            const pageIndex = this.slide.getCurrentPage().pageY;
+            this.currentPageIndex = pageIndex;
+        }
+        if (this._autoPlay) {
+            this._play();
+        }
+
+        this._cd.markForCheck();
     }
 }

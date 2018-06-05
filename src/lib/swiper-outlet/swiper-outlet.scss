@@ -17,15 +17,12 @@ swiper-outlet {
       overflow: hidden;
       text-align: center;
       width: 100%;
+      height: auto;
       a {
         display: block;
         width: 100%;
         overflow: hidden;
         text-decoration: none;
-      }
-      img {
-        display: block;
-        width: 100%;
       }
     }
   }
@@ -46,8 +43,13 @@ swiper-outlet {
     }
   }
 }
+
 swiper-outlet {
   &.scroll-x {
+    img {
+      display: block;
+      width: 100%;
+    }
     .dots {
       right: 0;
       left: 0;
@@ -66,6 +68,10 @@ swiper-outlet {
     }
   }
   &.scroll-y {
+    img {
+      display: block;
+      width: 100%;
+    }
     .dots {
       top: 0px;
       bottom: 0px;
