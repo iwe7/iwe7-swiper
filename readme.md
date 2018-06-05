@@ -47,6 +47,17 @@ list: any[] = [{
 }, {
     image: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000004ckGfg3zaho0.jpg'
 }];
+
+showDialogX() {
+    this.getCyc('ngAfterViewInit').subscribe(res => {
+        const dialogRef = this.dialog.open(this.tplX);
+    });
+}
+showDialogY() {
+    this.getCyc('ngAfterViewInit').subscribe(res => {
+        const dialogRef = this.dialog.open(this.tplY);
+    });
+}
 ```
 
 | 组件名                | 说明        | 地址                                         |
