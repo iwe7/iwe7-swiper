@@ -1,6 +1,6 @@
 <div class="slide-group" #group>
-  <ng-container *ngFor="let item of list;">
-    <ng-container *ngTemplateOutlet="_slide;context:{$implicit: item, index: index};"></ng-container>
+  <ng-container *ngFor="let item of list;index as i;">
+    <ng-container *ngTemplateOutlet="_slide;context:{$implicit: item, index: i};"></ng-container>
   </ng-container>
 </div>
 <div class="dots" *ngIf="_hasDot">
