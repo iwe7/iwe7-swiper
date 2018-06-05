@@ -1,0 +1,20 @@
+<div class="slide-group" #group>
+  <ng-container *ngFor="let item of list;">
+    <ng-container *ngTemplateOutlet="_slide;context:{$implicit: item, index: index};"></ng-container>
+  </ng-container>
+</div>
+<div class="dots" *ngIf="hasDot">
+  <ng-container *ngFor="let item of list;index as i;">
+    <ng-container *ngTemplateOutlet="_dot;context:{$implicit: currentPageIndex, index: i};"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #slideItem let-item>
+  <a>
+    <img [src]="item.image">
+  </a>
+</ng-template>
+
+<ng-template #dot let-current let-i="index">
+  <span class="dot" [class.active]="current === i"></span>
+</ng-template>
