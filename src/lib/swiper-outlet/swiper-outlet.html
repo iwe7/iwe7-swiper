@@ -10,9 +10,8 @@
 </div>
 
 <ng-template #slideItem let-item>
-  <a class="slide-item">
-    <img [src]="item.image">
-  </a>
+  <div class="slide-item" [swiperImage]="item.image">
+  </div>
 </ng-template>
 
 <ng-template #dot let-current let-i="index">

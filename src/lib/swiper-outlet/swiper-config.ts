@@ -1,3 +1,4 @@
+import { BaseWithIcss } from 'iwe7-base';
 import { Injectable } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Iwe7CoreComponent } from 'iwe7-core';
@@ -21,7 +22,7 @@ export class SwiperConfig {
     _hasDot: boolean = true;
 }
 
-export class SwiperBase extends Iwe7CoreComponent {
+export class SwiperBase extends BaseWithIcss {
     _loop: boolean = true;
     _click: boolean = true;
     _autoPlay: boolean = true;

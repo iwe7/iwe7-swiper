@@ -1,3 +1,4 @@
+import { SwiperImageDirective } from './swiper-directive/swiper-image';
 import { SwiperDotDirective } from './swiper-directive/swiper-dots';
 import { SwiperItemDirective } from './swiper-directive/swiper-item';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,8 @@ export const SwiperComponents = [
 
 export const SwiperDevices = [
   SwiperItemDirective,
-  SwiperDotDirective
+  SwiperDotDirective,
+  SwiperImageDirective
 ];
 
 @NgModule({

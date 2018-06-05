@@ -18,6 +18,18 @@ swiper-outlet {
       text-align: center;
       width: 100%;
       height: auto;
+      position: relative;
+      .swiper-image {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        background-size: 100% var(--height);
+        background-repeat: no-repeat;
+        zoom: 1;
+        background-position: center 0;
+      }
       a {
         display: block;
         width: 100%;
@@ -46,6 +58,12 @@ swiper-outlet {
 
 swiper-outlet {
   &.scroll-x {
+    .slide-group {
+      height: 100%;
+      .slide-item {
+        height: 100%;
+      }
+    }
     img {
       display: block;
       width: 100%;

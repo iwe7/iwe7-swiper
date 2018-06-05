@@ -1,8 +1,9 @@
+import { Iwe7IcssService } from 'iwe7-icss';
 import { SwiperDotDirective } from './../swiper-directive/swiper-dots';
 import { SwiperBase } from './swiper-config';
 import { SwiperItemDirective } from './../swiper-directive/swiper-item';
 import { HostBinding, ElementRef, ViewChild, ContentChild, Renderer2 } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { Iwe7CoreComponent } from 'iwe7-core';
 import {
     Component, OnInit, Injector,
@@ -24,10 +25,11 @@ import * as _ from 'lodash';
         '[class.scroll-y]': '_scrollY',
         '[style.height]': 'height'
     },
-    inputs: ['interval', 'threshold', 'speed', 'list']
+    inputs: ['interval', 'threshold', 'speed', 'list'],
+    providers: [Iwe7IcssService]
 })
 export class SwiperOutletComponent extends SwiperBase {
-    @Input() height: string = '120px';
+    @Input() height = '120px';
     @Input()
     set hasDot(val: any) {
         this._hasDot = coerceBooleanProperty(val);
@@ -89,30 +91,27 @@ export class SwiperOutletComponent extends SwiperBase {
     constructor(injector: Injector, public ele: ElementRef, public render: Renderer2) {
         super(injector);
         this.listChange();
+        this.setStyleInputs(['height']);
     }
     // 数据源改变时
     private listChange() {
         this.runOutsideAngular(() => {
-            this.getCyc('ngOnChanges').subscribe(res => {
-                if ('list' in res) {
-                    if (this.slide) {
-                        this.updateBetterScroll();
-                    } else {
-                        this.initBetterScroll();
-                    }
-                }
-            });
-
-            this.getCyc('ngAfterContentInit').subscribe(res => {
-                let index = 0;
-                if (this._loop) {
-                    index = this.currentPageIndex + 1;
-                } else {
-                    index = this.currentPageIndex;
-                }
-                const ele = this.children[index];
-                this.updateStyle();
-            });
+            this.getCyc('ngAfterViewInit').pipe(
+                tap(res => {
+                    this.initBetterScroll();
+                }),
+                switchMap((res: any) => {
+                    return this.getCyc('ngOnChanges').pipe(
+                        tap(res => {
+                            if ('list' in res) {
+                                if (this.slide) {
+                                    this.updateBetterScroll();
+                                }
+                            }
+                        })
+                    );
+                })
+            ).subscribe();
         });
     }
     // 刷新slide
