@@ -93,6 +93,23 @@ export class SwiperOutletComponent extends BetterScrollDirective {
                 interval: this._interval,
                 autoPlay: this._autoPlay
             });
+            const scrollEnd: any = () => {
+                this.onScrollEnd();
+            };
+            this._scroll.on('scrollEnd', scrollEnd);
         });
+    }
+
+    currentPageIndex: number = 0;
+
+    onScrollEnd() {
+        if (this.options.scrollX) {
+            this.currentPageIndex = this._scroll.pageX;
+        } else {
+            this.currentPageIndex = this._scroll.pageY;
+        }
+        if (this.options.autoPlay) {
+            this._scroll.play();
+        }
     }
 }
