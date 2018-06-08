@@ -1,19 +1,18 @@
+import { BetterScrollCore } from 'iwe7-better-scroll';
 import { Iwe7IcssService } from 'iwe7-icss';
 import { SwiperDotDirective } from './../swiper-directive/swiper-dots';
 import { SwiperBase } from './swiper-config';
 import { SwiperItemDirective } from './../swiper-directive/swiper-item';
-import { HostBinding, ElementRef, ViewChild, ContentChild, Renderer2 } from '@angular/core';
+import { ElementRef, ViewChild, ContentChild, Renderer2, SkipSelf } from '@angular/core';
 import { tap, switchMap } from 'rxjs/operators';
-import { Iwe7CoreComponent } from 'iwe7-core';
 import {
-    Component, OnInit, Injector,
+    Component, Injector, Optional,
     ChangeDetectionStrategy, ViewEncapsulation,
-    Input, AfterViewChecked, AfterContentChecked, AfterContentInit,
-    TemplateRef
+    Input, TemplateRef
 } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { BScroll } from '../util/better-scroll';
 import * as _ from 'lodash';
+
 @Component({
     selector: 'swiper-outlet',
     templateUrl: 'swiper-outlet.html',
@@ -26,10 +25,10 @@ import * as _ from 'lodash';
         '[style.height]': 'height'
     },
     inputs: ['interval', 'threshold', 'speed', 'list'],
-    providers: [Iwe7IcssService]
+    providers: [Iwe7IcssService, BetterScrollCore]
 })
 export class SwiperOutletComponent extends SwiperBase {
-    @Input() height = '120px';
+    @Input() height = '100%';
     @Input()
     set hasDot(val: any) {
         this._hasDot = coerceBooleanProperty(val);
@@ -88,7 +87,16 @@ export class SwiperOutletComponent extends SwiperBase {
         }
     }
 
-    constructor(injector: Injector, public ele: ElementRef, public render: Renderer2) {
+    constructor(
+        injector: Injector,
+        public ele: ElementRef,
+        public render: Renderer2,
+        @Optional()
+        public slide: BetterScrollCore,
+        @SkipSelf()
+        @Optional()
+        public parent: BetterScrollCore,
+    ) {
         super(injector);
         this.listChange();
         this.setStyleInputs(['height']);
@@ -131,11 +139,13 @@ export class SwiperOutletComponent extends SwiperBase {
                     threshold: this.threshold,
                     speed: this.speed
                 },
-                bounce: false,
+                bounce: true,
                 stopPropagation: true,
-                click: this.click
+                eventPassthrough: this._scrollX ? 'horizontal' : 'vertical',
+                click: this._click
             };
-            this.slide = new BScroll(this.ele.nativeElement, opt);
+            this.slide.init(this.ele.nativeElement, opt);
+            console.log(this.slide);
             this.slide.on('scrollEnd', () => {
                 this.run(() => {
                     this._onScrollEnd();
