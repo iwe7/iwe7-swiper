@@ -1,16 +1,15 @@
-<div class="swiper-container">
-  <div class="slide-group" #group>
+<div class="swiper-container" betterScroll>
+  <div class="slide-group">
     <ng-container *ngFor="let item of list;index as i;">
       <ng-container *ngTemplateOutlet="_slide;context:{$implicit: item, index: i};"></ng-container>
     </ng-container>
   </div>
-  <div class="dots" *ngIf="_hasDot">
-    <ng-container *ngFor="let item of list;index as i;">
-      <ng-container *ngTemplateOutlet="_dot;context:{$implicit: currentPageIndex, index: i};"></ng-container>
-    </ng-container>
-  </div>
 </div>
-
+<div class="dots" *ngIf="_hasDot && _dot">
+  <ng-container *ngFor="let item of list;index as i;">
+    <ng-container *ngTemplateOutlet="_dot;context:{$implicit: currentPageIndex, index: i};"></ng-container>
+  </ng-container>
+</div>
 <ng-template #slideItem let-item>
   <div class="slide-item" [swiperImage]="item.image">
   </div>

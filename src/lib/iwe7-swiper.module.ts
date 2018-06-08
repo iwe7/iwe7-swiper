@@ -1,3 +1,4 @@
+import { BetterCoreModule } from 'iwe7-better-scroll';
 import { SwiperImageDirective } from './swiper-directive/swiper-image';
 import { SwiperDotDirective } from './swiper-directive/swiper-dots';
 import { SwiperItemDirective } from './swiper-directive/swiper-item';
@@ -17,6 +18,7 @@ export const SwiperDevices = [
 @NgModule({
   imports: [
     CommonModule,
+    BetterCoreModule
   ],
   declarations: [
     ...SwiperComponents,

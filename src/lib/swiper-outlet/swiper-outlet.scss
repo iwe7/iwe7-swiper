@@ -4,7 +4,6 @@ swiper-outlet {
   min-height: 1px;
   display: block;
   position: relative;
-  overflow: hidden;
   height: var(--height);
   .swiper-container {
     position: absolute;
@@ -12,6 +11,7 @@ swiper-outlet {
     left: 0px;
     right: 0px;
     bottom: 0px;
+    overflow: hidden;
   }
   .slide-group {
     position: relative;
