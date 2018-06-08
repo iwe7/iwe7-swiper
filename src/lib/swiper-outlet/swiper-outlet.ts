@@ -1,16 +1,12 @@
 import { BetterManagerService, BetterScrollDirective } from 'iwe7-better-scroll';
 import { Iwe7IcssService } from 'iwe7-icss';
-import { SwiperDotDirective } from './../swiper-directive/swiper-dots';
-import { SwiperItemDirective } from './../swiper-directive/swiper-item';
-import { ElementRef, ViewChild, ContentChild, Renderer2 } from '@angular/core';
-import { tap, switchMap } from 'rxjs/operators';
+import { ElementRef, Renderer2 } from '@angular/core';
 import {
     Component, Injector,
     ChangeDetectionStrategy, ViewEncapsulation,
-    Input, TemplateRef
+    Input, Output, EventEmitter
 } from '@angular/core';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import * as _ from 'lodash';
 @Component({
     selector: 'swiper-outlet',
     templateUrl: 'swiper-outlet.html',
@@ -18,22 +14,28 @@ import * as _ from 'lodash';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        '[class.scroll-x]': '_scrollX',
-        '[class.scroll-y]': '_scrollY',
+        '[class.scroll-x]': 'scrollX',
+        '[class.scroll-y]': 'scrollY',
         '[style.height]': 'height'
     },
     inputs: ['interval', 'threshold', 'speed', 'list'],
-    providers: [Iwe7IcssService]
+    providers: [Iwe7IcssService],
+    exportAs: 'swiperOutlet'
 })
 export class SwiperOutletComponent extends BetterScrollDirective {
     @Input() height = '100%';
+    _hasDot: boolean = true;
     @Input()
     set hasDot(val: any) {
         this._hasDot = coerceBooleanProperty(val);
     }
     @Input()
     set loop(val: any) {
-        this.options.loop = coerceBooleanProperty(val);
+        (<any>this.options.snap).loop = coerceBooleanProperty(val);
+    }
+    @Input()
+    set speed(val: any) {
+        (<any>this.options.snap).speed = coerceNumberProperty(val);
     }
     // 自动轮播
     _autoPlay: boolean = true;
@@ -48,37 +50,8 @@ export class SwiperOutletComponent extends BetterScrollDirective {
         this._interval = coerceNumberProperty(val);
     }
 
-
-    _slide: TemplateRef<any>;
-    @ContentChild(SwiperItemDirective)
-    set swiperItem(val: any) {
-        if (val) {
-            this._slide = val.template;
-        }
-    }
-
-    @ViewChild('slideItem')
-    set slideItem(val: TemplateRef<any>) {
-        if (val) {
-            this._slide = val;
-        }
-    }
-    _dot: TemplateRef<any>;
-    // 替换模板
-    @ContentChild(SwiperDotDirective)
-    set swiperDot(val: any) {
-        if (val) {
-            this._dot = val.template;
-        }
-    }
-    // 默认模板
-    @ViewChild('dot')
-    set dot(val: TemplateRef<any>) {
-        if (!this._dot) {
-            this._dot = val;
-        }
-    }
-
+    @Output()
+    ngSlide: EventEmitter<number> = new EventEmitter();
     constructor(
         injector: Injector,
         public ele: ElementRef,
@@ -86,9 +59,17 @@ export class SwiperOutletComponent extends BetterScrollDirective {
         public better: BetterManagerService
     ) {
         super(ele, injector, better);
+        this.options.scrollX = true;
+        this.options.scrollY = false;
+        this.snap = {} as any;
+        this.click = true;
+        this.autoPlay = true;
         this.setStyleInputs(['height']);
         this.getCyc('betterScrollInited').subscribe(res => {
-            console.log(res);
+            this.styleObj = {
+                height: this.height
+            };
+            this.updateStyle(this.ele.nativeElement);
             this._scroll.autoPlay({
                 interval: this._interval,
                 autoPlay: this._autoPlay
@@ -104,12 +85,15 @@ export class SwiperOutletComponent extends BetterScrollDirective {
 
     onScrollEnd() {
         if (this.options.scrollX) {
-            this.currentPageIndex = this._scroll.pageX;
+            this.currentPageIndex = this._scroll.getPageX();
         } else {
-            this.currentPageIndex = this._scroll.pageY;
+            this.currentPageIndex = this._scroll.getPageY();
         }
-        if (this.options.autoPlay) {
+        this.ngSlide.emit(this.currentPageIndex);
+        if (this._autoPlay) {
             this._scroll.play();
         }
     }
+
 }
+

@@ -6,11 +6,12 @@ import { Iwe7CoreComponent } from 'iwe7-core';
 @Component({
     selector: '[swiperImage]',
     template: `
-        <div class="swiper-image" #image></div>
+        <div class="swiper-image" #image>
+            <ng-content></ng-content>
+        </div>
     `
 })
 export class SwiperImageDirective extends Iwe7CoreComponent {
-
     @Input() swiperImage: string;
     @ViewChild('image') image: ElementRef;
     constructor(
